@@ -17,8 +17,11 @@
     <div class="side-label">YOUR LITTLE SPACE</div>
     <nav class="navigation" aria-label="Main navigation">
       <button class="nav-link active" data-page="today"><span>☀️</span> My day</button>
-      <button class="nav-link" data-page="progress"><span>🌷</span> My progress</button>
-      <button class="nav-link" data-page="settings"><span>⚙️</span> Task settings</button>
+      
+<button class="nav-link" data-page="progress"><span>🌷</span> My progress</button>
+<button class="nav-link" data-page="before19"><span>💌</span> Before 19</button>
+<button class="nav-link" data-page="settings"><span>⚙️</span> Task settings</button>
+
     </nav>
     <div class="sidebar-bottom"><div class="side-flower">✿</div><p class="sidebar-quote">“Little by little,<br>one travels far.”</p><div class="sidebar-caption">GROW AT YOUR OWN PACE</div></div>
     <div class="sidebar-footer">MADE WITH ♡ FOR YOUR GROWTH</div>
@@ -66,6 +69,73 @@
       </section>
       <p class="settings-note">♡ Your habit list and progress are stored locally in this browser. Clearing browser site data may remove them, so export/back up your browser data if it is important to you.</p>
     </section>
+    
+<section id="before19Page" class="page hidden">
+  <section class="progress-hero before19-hero">
+    <span class="eyebrow">A LITTLE COLLECTION OF MY LIFE</span>
+    <h1>Before 19 💌</h1>
+    <p>Little adventures, creative moments, and everything I want to remember before turning 19.</p>
+    <div class="progress-message">
+      <span id="memoryCount">0</span> little memories collected ♡
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <span class="eyebrow">SAVE THIS MOMENT</span>
+        <h2 id="memoryFormTitle">What I did ✨</h2>
+        <p>A little moment today, a beautiful memory tomorrow.</p>
+      </div>
+      <span class="journal-flower">♡</span>
+    </div>
+
+    <form id="memoryForm" class="memory-form">
+      <input type="hidden" id="memoryId">
+
+      <label for="memoryTitle">What I did</label>
+      <input id="memoryTitle" type="text" maxlength="100"
+        placeholder="e.g. Made a handmade birthday card" required>
+
+      <label for="memoryDescription">Description</label>
+      <textarea id="memoryDescription" rows="4" maxlength="1500"
+        placeholder="What happened? Why is this special to me?"></textarea>
+
+      <label for="memoryPhoto">Photo (optional)</label>
+      <input id="memoryPhoto" type="file" accept="image/*">
+      <div id="memoryPhotoPreview" class="memory-photo-preview hidden">
+        <img id="memoryPreviewImage" alt="Preview of your memory photo">
+        <button id="removeMemoryPhoto" class="text-button" type="button">
+          Remove photo
+        </button>
+      </div>
+
+      <div class="memory-form-actions">
+        <button id="cancelMemoryEdit" class="secondary-button hidden" type="button">
+          Cancel edit
+        </button>
+        <button id="saveMemoryBtn" class="primary-button" type="submit">
+          ＋ Save my memory
+        </button>
+      </div>
+      <p class="memory-help">Your memories are saved in this browser on this device.</p>
+    </form>
+  </section>
+
+  <section class="section-block memory-collection">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">MY LITTLE TIME CAPSULE</span>
+        <h2>Moments to remember 🌷</h2>
+        <p class="section-subtitle">Every memory is a little piece of your story.</p>
+      </div>
+    </div>
+    <div id="memoryList" class="memory-grid"></div>
+    <p id="emptyMemories" class="empty-memories">
+      Your memory collection is waiting for its first story. ♡
+    </p>
+  </section>
+</section>
 
     <footer class="main-footer">Bloom19 <span>✿</span> growing gently, every day.</footer>
   </main>
