@@ -261,10 +261,29 @@ function deleteHabit(id) {
   persistHabits(); clearTaskForm(); renderAll(); renderSettings(); showToast("Task removed from your list.");
 }
 function showPage(page) {
-  ["today", "progress", "settings"].forEach(name => $(`#${name}Page`).classList.toggle("hidden", name !== page));
-  document.querySelectorAll(".nav-link").forEach(button => { const active = button.dataset.page === page; button.classList.toggle("active", active); button.setAttribute("aria-current", active ? "page" : "false"); });
-  if (page === "progress") { renderWeeklyChart(); renderCalendar(); renderProgressStats(); }
-  if (page === "settings") renderSettings();
+  ["today", "progress", "settings", "before19"].forEach(name => {
+    $(`#${name}Page`).classList.toggle("hidden", name !== page);
+  });
+
+  document.querySelectorAll(".nav-link").forEach(button => {
+    const active = button.dataset.page === page;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-current", active ? "page" : "false");
+  });
+
+  if (page === "progress") {
+    renderWeeklyChart();
+    renderCalendar();
+    renderProgressStats();
+  }
+
+  if (page === "settings") {
+    renderSettings();
+  }
+
+  if (page === "before19") {
+    renderMemories();
+  }
 }
 function renderAll() {
   renderDate(); renderBibleVerse(); renderHabits(); renderDailyNote(); renderTodayStats(); renderWeeklyChart(); renderCalendar(); renderProgressStats();
@@ -314,6 +333,408 @@ $("#taskForm").addEventListener("submit", event => {
   persistHabits(); clearTaskForm(); renderAll(); renderSettings();
 });
 $("#cancelEditBtn").addEventListener("click", clearTaskForm);
+/* =================================
+   BEFORE 19 - MEMORY JOURNAL
+================================= */
 
+const MEMORY_STORAGE_KEY = "bloom19-before19-v1";
+
+let memories = loadMemories();
+let currentMemoryPhoto = "";
+let removeCurrentMemoryPhoto = false;
+
+
+// Load saved memories
+function loadMemories() {
+  try {
+    const saved = JSON.parse(
+      localStorage.getItem(MEMORY_STORAGE_KEY) || "[]"
+    );
+
+    return Array.isArray(saved) ? saved : [];
+  } catch (error) {
+    console.error("Could not load memories:", error);
+    return [];
+  }
+}
+
+
+// Save memories to browser storage
+function saveMemories() {
+  try {
+    localStorage.setItem(
+      MEMORY_STORAGE_KEY,
+      JSON.stringify(memories)
+    );
+
+    return true;
+  } catch (error) {
+    console.error("Could not save memories:", error);
+    showToast("Storage is full. Try using a smaller photo.");
+    return false;
+  }
+}
+
+
+// Reset the memory form
+function resetMemoryForm() {
+  $("#memoryForm").reset();
+
+  $("#memoryId").value = "";
+  $("#memoryFormTitle").textContent = "What I did ✨";
+  $("#saveMemoryBtn").textContent = "＋ Save my memory";
+
+  $("#cancelMemoryEdit").classList.add("hidden");
+  $("#memoryPhotoPreview").classList.add("hidden");
+  $("#memoryPreviewImage").removeAttribute("src");
+  $("#memoryPhoto").value = "";
+
+  currentMemoryPhoto = "";
+  removeCurrentMemoryPhoto = false;
+}
+
+
+// Display photo preview
+function showMemoryPhoto(data) {
+  currentMemoryPhoto = data;
+
+  $("#memoryPreviewImage").src = data;
+  $("#memoryPhotoPreview").classList.toggle("hidden", !data);
+}
+
+
+// Compress photos to save browser storage
+function compressMemoryPhoto(file) {
+  return new Promise((resolve, reject) => {
+    if (!file.type.startsWith("image/")) {
+      reject(new Error("Please choose an image file."));
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onerror = () => {
+      reject(new Error("Could not read this photo."));
+    };
+
+    reader.onload = () => {
+      const image = new Image();
+
+      image.onerror = () => {
+        reject(new Error("Could not open this photo."));
+      };
+
+      image.onload = () => {
+        const maxSize = 900;
+
+        const scale = Math.min(
+          1,
+          maxSize / Math.max(image.width, image.height)
+        );
+
+        const canvas = document.createElement("canvas");
+
+        canvas.width = Math.max(
+          1,
+          Math.round(image.width * scale)
+        );
+
+        canvas.height = Math.max(
+          1,
+          Math.round(image.height * scale)
+        );
+
+        const context = canvas.getContext("2d");
+
+        context.drawImage(
+          image,
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+
+        resolve(canvas.toDataURL("image/jpeg", 0.75));
+      };
+
+      image.src = reader.result;
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+
+// Display all saved memories
+function renderMemories() {
+  const list = $("#memoryList");
+
+  list.innerHTML = "";
+
+  $("#memoryCount").textContent = memories.length;
+
+  $("#emptyMemories").classList.toggle(
+    "hidden",
+    memories.length > 0
+  );
+
+  const sortedMemories = [...memories].sort(
+    (a, b) => (b.createdAt || 0) - (a.createdAt || 0)
+  );
+
+  sortedMemories.forEach(memory => {
+    const card = document.createElement("article");
+
+    card.className = "memory-card";
+
+    // Photo
+    if (memory.photo) {
+      const photo = document.createElement("img");
+
+      photo.className = "memory-card-photo";
+      photo.src = memory.photo;
+      photo.alt = `Photo for ${memory.title}`;
+
+      card.appendChild(photo);
+    }
+
+    const content = document.createElement("div");
+
+    content.className = "memory-card-content";
+
+    // Date
+    const date = document.createElement("div");
+
+    date.className = "memory-card-date";
+
+    date.textContent = memory.date
+      ? formatDate(memory.date, {
+          day: "numeric",
+          month: "long",
+          year: "numeric"
+        })
+      : "";
+
+    // Title
+    const title = document.createElement("h3");
+
+    title.textContent = memory.title;
+
+    content.append(date, title);
+
+    // Description
+    if (memory.description) {
+      const description = document.createElement("p");
+
+      description.className = "memory-card-description";
+      description.textContent = memory.description;
+
+      content.appendChild(description);
+    }
+
+    // Edit and delete buttons
+    const actions = document.createElement("div");
+
+    actions.className = "memory-card-actions";
+
+    const edit = document.createElement("button");
+
+    edit.type = "button";
+    edit.className = "small-action";
+    edit.textContent = "Edit";
+
+    edit.addEventListener("click", () => {
+      editMemory(memory.id);
+    });
+
+    const remove = document.createElement("button");
+
+    remove.type = "button";
+    remove.className = "small-action delete-action";
+    remove.textContent = "Delete";
+
+    remove.addEventListener("click", () => {
+      deleteMemory(memory.id);
+    });
+
+    actions.append(edit, remove);
+
+    content.appendChild(actions);
+    card.appendChild(content);
+    list.appendChild(card);
+  });
+}
+
+
+// Edit a memory
+function editMemory(id) {
+  const memory = memories.find(item => item.id === id);
+
+  if (!memory) return;
+
+  $("#memoryId").value = memory.id;
+  $("#memoryTitle").value = memory.title;
+  $("#memoryDescription").value = memory.description || "";
+
+  $("#memoryFormTitle").textContent = "Edit your memory ✎";
+  $("#saveMemoryBtn").textContent = "Save changes";
+
+  $("#cancelMemoryEdit").classList.remove("hidden");
+
+  $("#memoryPhoto").value = "";
+
+  currentMemoryPhoto = memory.photo || "";
+  removeCurrentMemoryPhoto = false;
+
+  if (currentMemoryPhoto) {
+    showMemoryPhoto(currentMemoryPhoto);
+  } else {
+    $("#memoryPhotoPreview").classList.add("hidden");
+  }
+
+  $("#memoryForm").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+  $("#memoryTitle").focus();
+}
+
+
+// Delete a memory
+function deleteMemory(id) {
+  const memory = memories.find(item => item.id === id);
+
+  if (!memory) return;
+
+  if (!window.confirm(`Delete the memory "${memory.title}"?`)) {
+    return;
+  }
+
+  const previousMemories = memories;
+
+  memories = memories.filter(item => item.id !== id);
+
+  if (!saveMemories()) {
+    memories = previousMemories;
+    return;
+  }
+
+  renderMemories();
+
+  showToast("Memory deleted. ♡");
+}
+
+
+// Choose and preview a photo
+$("#memoryPhoto").addEventListener("change", async event => {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  if (file.size > 10 * 1024 * 1024) {
+    showToast("Choose a photo smaller than 10 MB.");
+
+    event.target.value = "";
+    return;
+  }
+
+  try {
+    const compressed = await compressMemoryPhoto(file);
+
+    showMemoryPhoto(compressed);
+
+    removeCurrentMemoryPhoto = false;
+  } catch (error) {
+    showToast(error.message || "Could not load this photo.");
+
+    event.target.value = "";
+  }
+});
+
+
+// Remove a photo
+$("#removeMemoryPhoto").addEventListener("click", () => {
+  currentMemoryPhoto = "";
+  removeCurrentMemoryPhoto = true;
+
+  $("#memoryPhoto").value = "";
+  $("#memoryPreviewImage").removeAttribute("src");
+  $("#memoryPhotoPreview").classList.add("hidden");
+});
+
+
+// Cancel editing
+$("#cancelMemoryEdit").addEventListener("click", resetMemoryForm);
+
+
+// Save a new memory or update an existing one
+$("#memoryForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const title = $("#memoryTitle").value.trim();
+
+  const description = $("#memoryDescription").value.trim();
+
+  const editingId = $("#memoryId").value;
+
+  if (!title) {
+    showToast("Please write what you did.");
+    return;
+  }
+
+  const existing = memories.find(
+    item => item.id === editingId
+  );
+
+  const memory = {
+    id: existing
+      ? existing.id
+      : `memory-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+
+    title,
+    description,
+
+    photo: removeCurrentMemoryPhoto
+      ? ""
+      : currentMemoryPhoto,
+
+    date: existing
+      ? existing.date
+      : getDateKey(new Date()),
+
+    createdAt: existing
+      ? existing.createdAt
+      : Date.now()
+  };
+
+  const previousMemories = memories;
+
+  if (existing) {
+    memories = memories.map(item =>
+      item.id === editingId ? memory : item
+    );
+  } else {
+    memories.push(memory);
+  }
+
+  if (!saveMemories()) {
+    memories = previousMemories;
+    return;
+  }
+
+  resetMemoryForm();
+  renderMemories();
+
+  showToast(
+    existing
+      ? "Memory updated! ♡"
+      : "A new memory saved! ♡"
+  );
+});
+
+
+// Keep these as the final two lines of script.js
 renderAll();
 showPage("today");
+
