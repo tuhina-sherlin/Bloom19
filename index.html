@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bloom19 — grow at your own pace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" href="#" aria-label="Bloom19 home"><span class="brand-icon">✿</span><span>Bloom<span class="brand-number">19</span></span></a>
+    <div class="side-label">YOUR LITTLE SPACE</div>
+    <nav class="navigation" aria-label="Main navigation">
+      <button class="nav-link active" data-page="today"><span>☀️</span> My day</button>
+      <button class="nav-link" data-page="progress"><span>🌷</span> My progress</button>
+      <button class="nav-link" data-page="settings"><span>⚙️</span> Task settings</button>
+    </nav>
+    <div class="sidebar-bottom"><div class="side-flower">✿</div><p class="sidebar-quote">“Little by little,<br>one travels far.”</p><div class="sidebar-caption">GROW AT YOUR OWN PACE</div></div>
+    <div class="sidebar-footer">MADE WITH ♡ FOR YOUR GROWTH</div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar"><div><span class="eyebrow">A LITTLE SPACE TO BLOOM</span><div class="topbar-title">Your gentle daily companion</div></div><div class="avatar">T</div></header>
+
+    <section id="todayPage" class="page">
+      <section class="hero">
+        <div class="hero-copy"><span class="eyebrow hero-eyebrow">A NEW DAY, A NEW LITTLE BEGINNING</span><h1>Hello, Tuhina! <span>♡</span></h1><p>You don't have to do it all. Just take one small step today.</p><div class="date-line"><span>♡</span><span id="todayDate"></span></div></div>
+        <div class="hero-art" aria-hidden="true"><div class="sun-circle"></div><div class="hero-flower">✿</div><span class="hero-spark spark-one">✧</span><span class="hero-spark spark-two">✦</span><div class="hero-note">breathe, believe,<br>become 🌷</div></div>
+      </section>
+
+      <section class="verse-card" aria-label="Bible verse of the day"><div class="verse-symbol">✝</div><div><div class="verse-label">A LITTLE WORD OF FAITH</div><blockquote id="bibleVerse">“I can do all things through Christ who strengthens me.”</blockquote><div class="verse-reference" id="bibleReference">Philippians 4:13</div></div><button id="nextVerseBtn" class="verse-next" type="button" aria-label="Show another Bible verse" title="Another verse">↻</button></section>
+
+      <section class="stats-grid">
+        <article class="stat-card"><div class="stat-top"><span class="stat-icon pink-icon">♡</span><span class="stat-label">TODAY'S PROGRESS</span></div><div class="stat-value"><span id="todayPercent">0</span><span class="stat-unit">%</span></div><div class="progress-track"><div id="todayBar" class="progress-fill pink-fill"></div></div><p id="todaySummary" class="stat-foot">Your journey starts here.</p></article>
+        <article class="stat-card"><div class="stat-top"><span class="stat-icon purple-icon">✓</span><span class="stat-label">LITTLE WINS</span></div><div class="stat-value"><span id="completedCount">0</span><span class="stat-unit"> / <span id="habitTotal">19</span></span></div><div class="progress-track"><div id="countBar" class="progress-fill purple-fill"></div></div><p id="habitCountLabel" class="stat-foot">0 completed</p></article>
+        <article class="stat-card"><div class="stat-top"><span class="stat-icon peach-icon">🔥</span><span class="stat-label">CURRENT STREAK</span></div><div class="stat-value"><span id="streakCount">0</span><span class="stat-unit"> days</span></div><p id="streakMessage" class="stat-foot">Start your own little streak.</p><span class="streak-decoration">✧ ✧</span></article>
+      </section>
+
+      <section class="section-block">
+        <div class="section-heading"><div><span class="eyebrow">SMALL STEPS COUNT</span><h2>My daily habits <span class="heading-flower">✿</span></h2><p class="section-subtitle">Tick off what you do. Progress, not perfection.</p></div><label class="date-control">VIEW A DAY<input id="datePicker" type="date"></label></div>
+        <div class="habit-toolbar"><span id="habitToolbarCount">Your personal habit list</span><button id="manageTasksBtn" class="text-button" type="button">Manage tasks ↗</button></div>
+        <div id="habitList" class="habit-list"></div>
+      </section>
+
+      <section class="panel journal-panel"><div class="panel-heading"><div><span class="eyebrow">A MOMENT FOR YOU</span><h2>Daily journal ✎</h2><p>Write down a thought, a gratitude, or a tiny win.</p></div><span class="journal-flower">♡</span></div><textarea id="dailyNote" maxlength="1000" rows="4" placeholder="Today, I'm grateful for…"></textarea><div class="note-footer"><span id="noteStatus">Your thoughts are saved automatically.</span><span id="noteLength">0 / 1000</span></div></section>
+      <div class="reset-row"><span>Need a fresh start for this day?</span><button id="resetDayBtn" class="text-button" type="button">Reset this day</button></div>
+    </section>
+
+    <section id="progressPage" class="page hidden">
+      <section class="progress-hero"><span class="eyebrow">LOOK HOW FAR YOU'VE COME</span><h1>Your growth, one day at a time 🌷</h1><p>Every little effort adds up. Celebrate the progress you may not always notice.</p><div class="progress-message" id="progressMessage">Your story is just beginning.</div><p id="progressSubmessage">Come back each day and keep growing.</p></section>
+      <section class="stats-grid progress-stats"><article class="stat-card"><span class="stat-label">DAYS YOU SHOWED UP</span><div class="stat-value"><span id="activeDays">0</span></div><p class="stat-foot">Days with at least one completed habit</p></article><article class="stat-card"><span class="stat-label">TOTAL LITTLE WINS</span><div class="stat-value"><span id="allTimeCount">0</span></div><p class="stat-foot">All completed habits combined</p></article><article class="stat-card"><span class="stat-label">OVERALL COMPLETION</span><div class="stat-value"><span id="averagePercent">0</span><span class="stat-unit">%</span></div><p class="stat-foot">Across days with activity</p></article></section>
+      <section class="panel"><div class="panel-heading"><div><span class="eyebrow">YOUR WEEK AT A GLANCE</span><h2>Weekly progress</h2><p>Completion for each day of this week.</p></div></div><div id="weeklyChart" class="weekly-chart"></div></section>
+      <section class="panel calendar-panel"><div class="panel-heading"><div><span class="eyebrow">YOUR JOURNEY</span><h2>Progress calendar</h2><p>Choose a past day to revisit your habits and journal.</p></div></div><div class="calendar-header"><button id="prevMonth" type="button" aria-label="Previous month">‹</button><h3 id="calendarMonth"></h3><button id="nextMonth" type="button" aria-label="Next month">›</button></div><div class="calendar-weekdays"><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span></div><div id="calendarGrid" class="calendar-grid"></div><div class="calendar-legend"><span><i></i> A day with completed habits</span><span><i class="legend-today"></i> Today</span></div></section>
+    </section>
+
+    <section id="settingsPage" class="page hidden">
+      <section class="progress-hero settings-hero"><span class="eyebrow">MAKE BLOOM19 YOURS</span><h1>Your habits, your way ⚙️</h1><p>Add the habits you want to build, change their names or emojis, and remove ones that no longer fit.</p></section>
+      <section class="panel settings-panel"><div class="panel-heading"><div><span class="eyebrow">PERSONALISE YOUR LIST</span><h2 id="taskFormTitle">Add a new task</h2><p>Your changes are saved in this browser automatically.</p></div></div>
+        <form id="taskForm" class="task-form"><input id="taskId" type="hidden"><label>Task name<input id="taskName" type="text" maxlength="70" placeholder="e.g. Read for 10 minutes" required></label><div class="form-row"><label>Category<input id="taskCategory" type="text" maxlength="40" placeholder="e.g. Mind & learning" required></label><label>Emoji<input id="taskEmoji" type="text" maxlength="8" placeholder="📚" value="🌷" required></label></div><div class="form-actions"><button id="cancelEditBtn" class="secondary-button hidden" type="button">Cancel edit</button><button class="primary-button" id="saveTaskBtn" type="submit">＋ Add task</button></div></form>
+        <div class="settings-list-heading"><h3>Your task list</h3><span id="settingsTaskCount">19 tasks</span></div><div id="settingsTaskList" class="settings-task-list"></div>
+      </section>
+      <p class="settings-note">♡ Your habit list and progress are stored locally in this browser. Clearing browser site data may remove them, so export/back up your browser data if it is important to you.</p>
+    </section>
+
+    <footer class="main-footer">Bloom19 <span>✿</span> growing gently, every day.</footer>
+  </main>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
