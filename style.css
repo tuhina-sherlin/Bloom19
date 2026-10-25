@@ -5,3 +5,154 @@
 @media(max-width:1050px){.main-content{padding:0 25px}.sidebar{width:220px;min-width:220px}.hero-art{flex-basis:190px}.hero-copy{padding:28px}.stats-grid{gap:11px}.stat-card{padding:16px}.habit-list{gap:8px}}
 @media(max-width:760px){.app-shell{display:block}.sidebar{width:100%;min-width:0;padding:13px 15px;border-right:0;border-bottom:1px solid var(--border)}.brand{margin:0 0 12px;font-size:22px}.brand-icon{font-size:27px}.side-label,.sidebar-bottom,.sidebar-footer{display:none}.navigation{display:flex;gap:6px}.nav-link{justify-content:center;gap:7px;padding:10px 11px;font-size:11px}.nav-link span{font-size:16px}.main-content{padding:0 15px}.topbar{min-height:76px;margin-bottom:18px}.hero{min-height:210px}.hero-copy{padding:25px 22px}.hero-art{flex:0 0 115px}.sun-circle{width:110px;height:110px}.hero-flower{font-size:83px}.hero-note{right:2px;bottom:12px;padding:7px;font-size:10px}.spark-one{right:12px}.spark-two{left:4px}.verse-card{gap:11px;padding:14px}.verse-symbol{flex-basis:34px;height:34px;font-size:19px}.verse-card blockquote{font-size:15px}.stats-grid{grid-template-columns:1fr;gap:10px;margin:15px 0 28px}.stat-card{padding:16px}.stat-value{margin:10px 0;font-size:28px}.section-heading{align-items:flex-start;flex-direction:column;gap:12px}.date-control input{width:100%;max-width:230px}.habit-list{grid-template-columns:1fr}.panel{padding:19px 16px;margin:20px 0}.panel-heading h2,.section-heading h2{font-size:22px}.progress-hero{padding:24px 20px}.weekly-chart{gap:7px;min-height:185px}.chart-track{height:115px}.calendar-weekdays,.calendar-grid{gap:4px}.calendar-day{min-height:35px}.form-row{grid-template-columns:minmax(0,1fr) 90px}.settings-task-row{gap:8px;padding:10px 8px}.settings-task-emoji{flex-basis:28px;width:28px;height:28px}.small-action{padding:6px}.toast{right:12px;bottom:12px}}
 @media(max-width:390px){.hero-art{display:none}.hero-copy{padding:24px 19px}.nav-link{padding:9px 8px}.nav-link span{display:none}.verse-card blockquote{font-size:14px}.form-row{grid-template-columns:1fr}.task-actions{flex-direction:column}.calendar-day{min-height:31px}}
+
+/* BEFORE 19 — memory journal */
+.before19-hero {
+  margin-bottom: 22px;
+  background: linear-gradient(115deg, #f8e7ed, #f3edf9, #fff8f2);
+}
+
+.memory-form {
+  display: grid;
+  gap: 10px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: #fff9fb;
+}
+
+.memory-form label {
+  margin-top: 5px;
+  color: #897783;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.memory-form input[type="text"],
+.memory-form textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #eadde3;
+  border-radius: 9px;
+  background: white;
+  color: var(--ink);
+}
+
+.memory-form textarea {
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.memory-form input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px dashed #dfbdcc;
+  border-radius: 9px;
+  background: white;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.memory-photo-preview {
+  display: grid;
+  justify-items: start;
+  gap: 5px;
+}
+
+.memory-photo-preview img {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  max-height: 280px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.memory-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.memory-help {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.memory-card {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  background: white;
+  box-shadow: var(--shadow);
+}
+
+.memory-card-photo {
+  display: block;
+  width: 100%;
+  max-height: 300px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: #f8e7ed;
+}
+
+.memory-card-content {
+  padding: 18px;
+}
+
+.memory-card-date {
+  color: #aa8797;
+  font-size: 10px;
+}
+
+.memory-card h3 {
+  margin: 7px 0;
+  font-family: "Playfair Display", serif;
+  font-size: 21px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.memory-card-description {
+  color: #897984;
+  font-size: 12px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.memory-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.empty-memories {
+  padding: 25px;
+  border: 1px dashed #e5cbd7;
+  border-radius: 12px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 12px;
+}
+
+@media (max-width: 760px) {
+  .memory-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .memory-form {
+    padding: 15px;
+  }
+}
